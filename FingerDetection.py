@@ -28,13 +28,20 @@ print(len(overlayList))
 
 while True:
     success, img = cap.read()
-    img, singleHand = detector.findHands(img=img)
+    img = cv2.flip(img, 1)
+    img, Hand = detector.findHands(img=img)
     lmList = detector.findPosition(img=img, draw=False)
 
-    if singleHand:
+    if Hand != "Both" and Hand != None:
+        print(Hand)
+        ThumbOpen = False
+        if(Hand == "Right" and lmList[4][1] < lmList[3][1]):
+            ThumbOpen = True
+        if(Hand == "Left" and lmList[4][1] > lmList[3][1]):
+            ThumbOpen = True
         if len(lmList) != 0:
             fingers = []
-            if (lmList[4][1] < lmList[3][1]):
+            if (ThumbOpen):
                 fingers.append(1)
             else:
                 fingers.append(0)

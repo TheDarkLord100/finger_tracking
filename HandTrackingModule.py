@@ -20,17 +20,18 @@ class handDetector():
 
         imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         self.results = self.hands.process(imgRGB)
-        singleHand = True
+        Hand = None
         if self.results.multi_hand_landmarks:
             if(len(self.results.multi_handedness) == 2):
                 cv2.putText(img, "Use ONE HAND", (200, 400), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3)
-                singleHand = False
+                Hand = "Both"
             else:
+                Hand = (str)(self.results.multi_handedness[0].classification[0].label)
                 for handLms in self.results.multi_hand_landmarks:
                     if draw:
                         self.mpDraw.draw_landmarks(img, handLms, self.mpHands.HAND_CONNECTIONS)
 
-        return img, singleHand
+        return img, Hand
 
     def findPosition(self, img, handNo=0, draw=True):
 
